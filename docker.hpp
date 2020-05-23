@@ -46,6 +46,10 @@ namespace docker{
       delete []c_bash;
     }
 
+    //设置主机名
+    void set_hostname(){
+      sethostname(this->config.host_name.c_str(),this->config.host_name.length());
+    }
   public:
     //构造函数
     container(container_config &config){
@@ -57,6 +61,7 @@ namespace docker{
         auto _this = reinterpret_cast<container*>(args);
 
         //调用start_bash
+        _this->set_hostname();
         _this->start_bash();
 
         return proc_wait;
@@ -68,5 +73,5 @@ namespace docker{
       //这里setup函数未lambda函数，C++中捕获列表为空的lambda函数可以作为函数指针传递
       waitpid(child_pid,NULL,0); //等待子进程退出
     }
-  }
+  };
 }
