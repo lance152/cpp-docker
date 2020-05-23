@@ -50,6 +50,15 @@ namespace docker{
     void set_hostname(){
       sethostname(this->config.host_name.c_str(),this->config.host_name.length());
     }
+
+    //设置根目录
+    void set_rootdir(){
+      //chdir系统调用，切换到某个目录下
+      chdir(this->config.root_dir.c_str());
+
+      //chroot系统调用，设置根目录，因为刚才已经切换过当前目录，直接使用当前目录即可
+      chroot(".");
+    }
   public:
     //构造函数
     container(container_config &config){
@@ -62,12 +71,13 @@ namespace docker{
 
         //调用start_bash
         _this->set_hostname();
+        _this->set_rootdir();
         _this->start_bash();
 
         return proc_wait;
       };
 
-      process_pid child_pid = clone(setup,child_stack+STACK_SIZE,CLONE_NEWUTS | SIGCHLD,this);
+      process_pid child_pid = clone(setup,child_stack+STACK_SIZE,CLONE_NEWNS | CLONE_NEWUTS | SIGCHLD,this);
       //首先child_stack+STACK_SIZE会移动到栈底，SIGCHLD会在子进程退出时发出信号给父进程
       //这里传入了this指针是为了让etup函数获得contaier对象
       //这里setup函数未lambda函数，C++中捕获列表为空的lambda函数可以作为函数指针传递
