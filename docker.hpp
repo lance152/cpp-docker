@@ -67,7 +67,7 @@ namespace docker{
         return proc_wait;
       };
 
-      process_pid child_pid = clone(setup,child_stack+STACK_SIZE,SIGCHLD,this);
+      process_pid child_pid = clone(setup,child_stack+STACK_SIZE,CLONE_NEWUTS | SIGCHLD,this);
       //首先child_stack+STACK_SIZE会移动到栈底，SIGCHLD会在子进程退出时发出信号给父进程
       //这里传入了this指针是为了让etup函数获得contaier对象
       //这里setup函数未lambda函数，C++中捕获列表为空的lambda函数可以作为函数指针传递
