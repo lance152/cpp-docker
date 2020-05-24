@@ -10,7 +10,7 @@
 
 #include <net/if.h> //if_nametoindex
 #include <arpa/inet.h> //inet_pton
-#include "nework.h"
+#include "network.h"
 
 #define STACK_SIZE (512*512) //定义子进程空间大小
 
@@ -86,7 +86,7 @@ namespace docker{
 
       //ip地址转换函数，将ip地址在点分十进制和二进制之间进行转换
       inet_pton(AF_INET,this->config.ip.c_str(),&ipv4);
-      inet_pton(AF_INET,"255.255.255.0".&bcast);
+      inet_pton(AF_INET,"255.255.255.0",&bcast);
       inet_pton(AF_INET,this->config.bridge_ip.c_str(),&gateway);
 
       //配置eth0 ip地址

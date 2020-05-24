@@ -10,6 +10,6 @@ all:
 	make container
 container:
 	$(C) -c $(C_LIB)
-	$(CXX) $(LD) -0 $(OUT) $(MAIN) $(C_LINK)
+	$(CXX) $(LD) -o $(OUT) $(MAIN) $(C_LINK)
 clean:
 	rm *.o $(OUT)
